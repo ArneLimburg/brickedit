@@ -5,8 +5,9 @@ import { importMetaAssets } from '@web/rollup-plugin-import-meta-assets';
 import { terser } from 'rollup-plugin-terser';
 import { generateSW } from 'rollup-plugin-workbox';
 import path from 'path';
+import { copy } from '@web/rollup-plugin-copy';
 
-export default {
+export default [{
   input: 'index.html',
   output: {
     entryFileNames: '[hash].js',
@@ -80,5 +81,9 @@ export default {
       clientsClaim: true,
       runtimeCaching: [{ urlPattern: 'polyfills/*.js', handler: 'CacheFirst' }],
     }),
+    copy({
+      patterns: '{files,models}/**/*.{txt,png,dat,mpd}',
+    }),
   ],
-};
+},
+];
