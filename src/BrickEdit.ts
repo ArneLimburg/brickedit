@@ -1,38 +1,14 @@
 /* eslint-disable no-var */
 /* eslint-disable vars-on-top */
-import {
-  AmbientLight,
-  Box3,
-  BufferGeometry,
-  Camera,
-  Group,
-  Material,
-  Mesh,
-  PerspectiveCamera,
-  PointLight,
-  Scene,
-  Vector3,
-  WebGLRenderer,
-} from 'three';
+import { AmbientLight, Group, PointLight, Scene } from 'three';
 import { LDrawLoader } from './loaders/LDrawLoader.js';
+import { ModelPane } from './ModelPane.js';
 // import { OrbitControls } from './controls/OrbitControls.js';
 
 export class BrickEdit extends HTMLElement {
-  host: HTMLElement | undefined;
+  scene: Scene;
 
-  canvas: any;
-
-  renderer: any;
-
-  scene: any;
-
-  camera: Camera | undefined;
-
-  geometry: BufferGeometry | undefined;
-
-  material: Material | undefined;
-
-  cube: Mesh<BufferGeometry, Material> | undefined;
+  modelPane: ModelPane;
 
   constructor() {
     super();
@@ -53,33 +29,11 @@ export class BrickEdit extends HTMLElement {
 	border:0px solid red;
 }
 </style>
-<canvas id="c"></canvas>`;
+<model-pane id="pane"></model-pane>`;
     this.attachShadow({ mode: 'open' });
     this.shadowRoot?.appendChild(template.content.cloneNode(true));
-    this.host = this.shadowRoot?.host as HTMLElement; // use of host might be unnecessary
-    this.canvas = this.shadowRoot?.querySelector('#c');
-  }
-
-  connectedCallback() {
-    // fires with constructor is done.
-    this.init();
-    this.renderer.render(this.scene, this.camera);
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  init() {
-    this.camera = new PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      1,
-      10000
-    );
-    this.camera.position.set(0, 0, 500);
-
-    // scene
 
     this.scene = new Scene();
-
     const ambientLight = new AmbientLight(0xcccccc, 0.4);
     this.scene.add(ambientLight);
 
@@ -87,17 +41,21 @@ export class BrickEdit extends HTMLElement {
     pointLight.position.set(-1000, 1200, 1500);
     this.scene.add(pointLight);
 
-    //
+    this.modelPane = this.shadowRoot?.querySelector('#pane') as ModelPane;
+    this.modelPane.scene = this.scene;
+  }
 
-    this.renderer = new WebGLRenderer({ canvas: this.canvas });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  connectedCallback() {
+    this.init();
+  }
 
-    //    const controls = new OrbitControls( this.camera, this.renderer.domElement );
+  // eslint-disable-next-line class-methods-use-this
+  init() {
     const ldrawPath = 'models/ldraw/officialLibrary/';
 
     var model: Group;
     const lDrawLoader = new LDrawLoader();
-    const { camera, canvas, renderer, scene } = this;
+    const { scene, modelPane } = this;
     lDrawLoader.setPath(ldrawPath).load(
       'models/car.ldr_Packed.mpd',
       (group: Group) => {
@@ -114,16 +72,13 @@ export class BrickEdit extends HTMLElement {
 
         // Adjust camera and light
 
-        var bbox = new Box3().setFromObject(model);
-        var size = bbox.getSize(new Vector3());
-        var radius = Math.max(size.x, Math.max(size.y, size.z)) * 0.5;
+        // var bbox = new Box3().setFromObject(model);
+        // var size = bbox.getSize(new Vector3());
+        // var radius = Math.max(size.x, Math.max(size.y, size.z)) * 0.5;
 
-        pointLight.position.normalize().multiplyScalar(radius * 3);
-        renderer.render(scene, camera);
-        renderer.gammaInput = true;
-        renderer.gammaOutput = true;
-        const { width, height } = canvas;
-        renderer.setSize(width, height, false);
+        // this.pointLight.position.normalize().multiplyScalar(radius * 3);
+        modelPane.scene = scene;
+        modelPane.render();
       },
       () => {},
       () => {}
