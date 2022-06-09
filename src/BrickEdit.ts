@@ -21,13 +21,6 @@ export class BrickEdit extends HTMLElement {
 	margin: 0;
 	height: 100%;
 }
-
-#c {
-	width: 100%;
-	height: 100%;
-	display: block;
-	border:0px solid red;
-}
 </style>
 <model-pane id="pane"></model-pane>`;
     this.attachShadow({ mode: 'open' });
