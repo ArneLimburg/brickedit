@@ -1055,6 +1055,8 @@ class LDrawParsedCache {
 					}
 
 					subobjects.push( {
+						line: line,
+						lineIndex: lineIndex,
 						material: material,
 						colorCode: colorCode,
 						matrix: matrix,
@@ -1076,6 +1078,8 @@ class LDrawParsedCache {
 					v1 = lp.getVector();
 
 					segment = {
+						line: line,
+						lineIndex: lineIndex,
 						material: material,
 						colorCode: colorCode,
 						vertices: [ v0, v1 ],
@@ -1096,6 +1100,8 @@ class LDrawParsedCache {
 					c1 = lp.getVector();
 
 					segment = {
+						line: line,
+						lineIndex: lineIndex,
 						material: material,
 						colorCode: colorCode,
 						vertices: [ v0, v1 ],
@@ -1129,6 +1135,8 @@ class LDrawParsedCache {
 					}
 
 					faces.push( {
+						line: line,
+						lineIndex: lineIndex,
 						material: material,
 						colorCode: colorCode,
 						faceNormal: null,
@@ -1179,6 +1187,8 @@ class LDrawParsedCache {
 					// specifically place the triangle diagonal in the v0 and v1 slots so we can
 					// account for the doubling of vertices later when smoothing normals.
 					faces.push( {
+						line: line,
+						lineIndex: lineIndex,
 						material: material,
 						colorCode: colorCode,
 						faceNormal: null,

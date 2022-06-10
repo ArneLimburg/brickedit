@@ -1,5 +1,17 @@
+// eslint-disable-next-line max-classes-per-file
 import { Camera, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
-// import { OrbitControls } from './controls/OrbitControls.js';
+import { OrbitControls } from './controls/OrbitControls.js';
+
+// eslint-disable-next-line no-shadow
+enum CameraDirection {
+  FRONT,
+  BACK,
+  LEFT,
+  RIGHT,
+  TOP,
+  BOTTOM,
+  _3D,
+}
 
 export class ModelPane extends HTMLElement {
   canvas: HTMLCanvasElement;
@@ -9,6 +21,10 @@ export class ModelPane extends HTMLElement {
   scene: Scene;
 
   camera: Camera;
+
+  cameraDirection = CameraDirection.FRONT;
+
+  controls: OrbitControls;
 
   constructor() {
     super();
@@ -34,12 +50,13 @@ button {
 }
 </style>
 <div>
-<button id="from-left">From left</button>
-<button id="from-right">From right</button>
-<button id="from-top">From top</button>
-<button id="from-bottom">From bottom</button>
-<button id="from-front">From front</button>
-<button id="from-back">From back</button>
+  <button id="from-left">From left</button>
+  <button id="from-right">From right</button>
+  <button id="from-top">From top</button>
+  <button id="from-bottom">From bottom</button>
+  <button id="from-front">From front</button>
+  <button id="from-back">From back</button>
+  <button id="in-3D">3D</button>
 </div>
 <canvas id="canvas"></canvas>`;
     this.attachShadow({ mode: 'open' });
@@ -56,12 +73,15 @@ button {
       1,
       10000
     );
-    this.camera.position.set(0, 500, 0);
-    // this.camera.rotateY( Math.PI /2 );
+    this.camera.position.set(0, 0, 500);
     this.camera.lookAt(this.scene.position);
 
     this.renderer = new WebGLRenderer({ canvas: this.canvas });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    this.controls = new OrbitControls(this.camera, this.canvas);
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
 
     const pane = this;
     const leftButton = this.shadowRoot?.querySelector(
@@ -88,6 +108,10 @@ button {
       '#from-back'
     ) as HTMLButtonElement;
     backButton.onclick = () => pane.viewFromBack();
+    const threeDButton = this.shadowRoot?.querySelector(
+      '#in-3D'
+    ) as HTMLButtonElement;
+    threeDButton.onclick = () => pane.viewIn3D();
   }
 
   connectedCallback() {
@@ -95,42 +119,78 @@ button {
   }
 
   render() {
+    requestAnimationFrame(() => this.render());
+    this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }
 
   viewFromLeft() {
     this.camera.position.set(500, 0, 0);
     this.camera.lookAt(this.scene.position);
+    this.cameraDirection = CameraDirection.LEFT;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
+    this.controls.update();
     this.render();
   }
 
   viewFromRight() {
     this.camera.position.set(-500, 0, 0);
     this.camera.lookAt(this.scene.position);
+    this.cameraDirection = CameraDirection.RIGHT;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
+    this.controls.update();
     this.render();
   }
 
   viewFromTop() {
     this.camera.position.set(0, 500, 0);
     this.camera.lookAt(this.scene.position);
+    this.cameraDirection = CameraDirection.TOP;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
+    this.controls.update();
     this.render();
   }
 
   viewFromBottom() {
     this.camera.position.set(0, -500, 0);
     this.camera.lookAt(this.scene.position);
+    this.cameraDirection = CameraDirection.BOTTOM;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
+    this.controls.update();
     this.render();
   }
 
   viewFromFront() {
     this.camera.position.set(0, 0, 500);
     this.camera.lookAt(this.scene.position);
+    this.cameraDirection = CameraDirection.FRONT;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
+    this.controls.update();
     this.render();
   }
 
   viewFromBack() {
     this.camera.position.set(0, 0, -500);
     this.camera.lookAt(this.scene.position);
+    this.cameraDirection = CameraDirection.BACK;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
+    this.controls.update();
+    this.render();
+  }
+
+  viewIn3D() {
+    this.camera.position.set(289, 289, 289);
+    this.camera.lookAt(this.scene.position);
+    this.cameraDirection = CameraDirection.BACK;
+    this.controls.enableRotate = true;
+    this.controls.enablePan = false;
+    this.controls.update();
     this.render();
   }
 }
