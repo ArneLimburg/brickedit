@@ -1,8 +1,8 @@
-import { Material } from "three";
+import { Material } from 'three';
 
 export interface AbstractElement {
-    line: string,
-	lineIndex: number,
-	material: Material,
-    colorCode: string,
+  line: string;
+  lineIndex: number;
+  material?: Material;
+  colorCode: string;
 }

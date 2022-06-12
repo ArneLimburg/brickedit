@@ -135,7 +135,6 @@ button#in-3d {
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = CameraDirection.LEFT;
     this.controls.enableRotate = false;
-    this.controls.enablePan = true;
     this.controls.update();
     this.render();
   }
@@ -145,7 +144,6 @@ button#in-3d {
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = CameraDirection.RIGHT;
     this.controls.enableRotate = false;
-    this.controls.enablePan = true;
     this.controls.update();
     this.render();
   }
@@ -155,7 +153,6 @@ button#in-3d {
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = CameraDirection.TOP;
     this.controls.enableRotate = false;
-    this.controls.enablePan = true;
     this.controls.update();
     this.render();
   }
@@ -165,7 +162,6 @@ button#in-3d {
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = CameraDirection.BOTTOM;
     this.controls.enableRotate = false;
-    this.controls.enablePan = true;
     this.controls.update();
     this.render();
   }
@@ -175,7 +171,6 @@ button#in-3d {
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = CameraDirection.FRONT;
     this.controls.enableRotate = false;
-    this.controls.enablePan = true;
     this.controls.update();
     this.render();
   }
@@ -185,7 +180,6 @@ button#in-3d {
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = CameraDirection.BACK;
     this.controls.enableRotate = false;
-    this.controls.enablePan = true;
     this.controls.update();
     this.render();
   }
@@ -195,7 +189,6 @@ button#in-3d {
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = CameraDirection.BACK;
     this.controls.enableRotate = true;
-    this.controls.enablePan = false;
     this.controls.update();
     this.render();
   }
