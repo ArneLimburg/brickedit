@@ -50,6 +50,10 @@ button {
   width: 60px;
   height: 60px;
 }
+button#in-3d {
+  background: url("./files/cube.svg");
+  border: none;
+}
 </style>
 <div>
   <button id="from-left">From left</button>
@@ -58,7 +62,7 @@ button {
   <button id="from-bottom">From bottom</button>
   <button id="from-front">From front</button>
   <button id="from-back">From back</button>
-  <button id="in-3D">3D</button>
+  <button id="in-3d">3D</button>
 </div>
 <canvas id="canvas"></canvas>`;
     this.attachShadow({ mode: 'open' });
@@ -111,7 +115,7 @@ button {
     ) as HTMLButtonElement;
     backButton.onclick = () => pane.viewFromBack();
     const threeDButton = this.shadowRoot?.querySelector(
-      '#in-3D'
+      '#in-3d'
     ) as HTMLButtonElement;
     threeDButton.onclick = () => pane.viewIn3D();
   }
