@@ -40,6 +40,8 @@ export class ModelPane extends HTMLElement {
 }
 div {
   position: absolute;
+  display: flex;
+  flex-direction: row;
 }
 button {
   margin-left: 18px;
