@@ -2091,8 +2091,12 @@ export class LDrawLoader extends Loader {
 				material = loader.getMaterial( colorCode );
 				if ( material === null ) {
 
-					// otherwise throw an error if this is final opportunity to set the material
-					throw new Error( `LDrawLoader: Material properties for code ${ colorCode } not available.` );
+					material = loader.getMaterial( parentColorCode );
+
+					if (material === null) {
+   					    // otherwise throw an error if this is final opportunity to set the material
+					    throw new Error( `LDrawLoader: Material properties for code ${ colorCode } not available.` );
+					}
 
 				}
 
