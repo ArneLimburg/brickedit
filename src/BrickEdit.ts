@@ -43,15 +43,18 @@ export class BrickEdit extends HTMLElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  init() {
-    const ldrawPath = 'models/ldraw/officialLibrary/';
+  async init() {
+    const lDrawPath = 'models/ldraw/';
 
     var model: Group;
     const lDrawLoader = new LDrawLoader();
     const { scene, modelPane } = this;
-    lDrawLoader.setPath(ldrawPath).load(
-      'models/car.ldr_Packed.mpd',
+    lDrawLoader.setPartsLibraryPath(lDrawPath);
+    await lDrawLoader.preloadMaterials(`${lDrawPath}LDConfig.ldr`);
+    lDrawLoader.load(
+      `${lDrawPath}models/car.dat`,
       (group: Group) => {
+        console.log('loaded');
         if (model) {
           scene.remove(model);
         }
@@ -73,8 +76,12 @@ export class BrickEdit extends HTMLElement {
         modelPane.scene = scene;
         modelPane.render();
       },
-      () => {},
-      () => {}
+      () => {
+        console.log('progress');
+      },
+      (e: any) => {
+        console.log(`error${e}`);
+      }
     );
   }
 }

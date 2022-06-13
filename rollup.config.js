@@ -82,7 +82,7 @@ export default [{
       runtimeCaching: [{ urlPattern: 'polyfills/*.js', handler: 'CacheFirst' }],
     }),
     copy({
-      patterns: '{files,models}/**/*.{txt,png,dat,mpd}',
+      patterns: '{files,models}/**/*.{txt,png,svg,ldr,dat,mpd}',
     }),
   ],
 },
