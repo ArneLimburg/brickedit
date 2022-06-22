@@ -1,14 +1,19 @@
 /* eslint-disable no-var */
 /* eslint-disable vars-on-top */
-import { AmbientLight, Group, PointLight, Scene } from 'three';
+import { AmbientLight, PointLight, Scene } from 'three';
 import { LDrawLoader } from './loaders/LDrawLoader.js';
+import { ModelInfo } from './loaders/ModelInfo.js';
+import { Model } from './Model.js';
 import { ModelPane } from './ModelPane.js';
-// import { OrbitControls } from './controls/OrbitControls.js';
 
 export class BrickEdit extends HTMLElement {
   scene: Scene;
 
   modelPane: ModelPane;
+
+  lDrawLoader: LDrawLoader;
+
+  model?: Model;
 
   constructor() {
     super();
@@ -36,6 +41,8 @@ export class BrickEdit extends HTMLElement {
 
     this.modelPane = this.shadowRoot?.querySelector('#pane') as ModelPane;
     this.modelPane.scene = this.scene;
+
+    this.lDrawLoader = new LDrawLoader();
   }
 
   connectedCallback() {
@@ -45,43 +52,55 @@ export class BrickEdit extends HTMLElement {
   // eslint-disable-next-line class-methods-use-this
   async init() {
     const lDrawPath = 'models/ldraw/';
+    this.lDrawLoader.setPartsLibraryPath(lDrawPath);
+    await this.loadModel();
+  }
 
-    var model: Group;
-    const lDrawLoader = new LDrawLoader();
-    const { scene, modelPane } = this;
-    lDrawLoader.setPartsLibraryPath(lDrawPath);
+  async loadModel() {
+    let loadingSuccessful: (model: Model) => void;
+    let loadingError: (reason: any) => void;
+    const modelLoaded = new Promise<Model>((resolve, reject) => {
+      loadingSuccessful = resolve;
+      loadingError = reject;
+    });
+    const lDrawPath = 'models/ldraw/';
+    this.lDrawLoader.setPartsLibraryPath(lDrawPath);
+    const fileName = 'models/car.dat';
+    const { lDrawLoader } = this;
     await lDrawLoader.preloadMaterials(`${lDrawPath}LDConfig.ldr`);
-    lDrawLoader.load(
-      `${lDrawPath}models/car.dat`,
-      (group: Group) => {
-        console.log('loaded');
-        if (model) {
-          scene.remove(model);
-        }
-
-        model = group;
-
-        // Convert from LDraw coordinates: rotate 180 degrees around OX
-        model.rotation.x = Math.PI;
-
-        scene.add(model);
-
-        // Adjust camera and light
-
-        // var bbox = new Box3().setFromObject(model);
-        // var size = bbox.getSize(new Vector3());
-        // var radius = Math.max(size.x, Math.max(size.y, size.z)) * 0.5;
-
-        // this.pointLight.position.normalize().multiplyScalar(radius * 3);
-        modelPane.scene = scene;
-        modelPane.render();
-      },
+    this.lDrawLoader.load(
+      `${lDrawPath}${fileName}`,
       () => {
-        console.log('progress');
+        const content = `0 ~Moved to car.ldr
+      0 Name: car.dat
+      0 Author: [PTadmin]
+      0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+      
+      0 BFC CERTIFY CCW
+      
+      0 // This file is just a redirection file.
+      0 // It expresses that the previous official file car.dat nowadays has been moved to car.ldr
+      0 // Please only refer to that file, not this one. This one is obsolete.
+      
+      1 16 0 0 0 1 0 0 0 1 0 0 0 1 car.ldr`;
+
+        const modelInfo = lDrawLoader.partsCache.parseCache.parse(
+          content
+        ) as ModelInfo;
+
+        const model = new Model(fileName, content, modelInfo, lDrawLoader);
+        loadingSuccessful(model);
       },
-      (e: any) => {
-        console.log(`error${e}`);
-      }
+      () => {},
+      (reason: any) => loadingError(reason)
     );
+    this.model = await modelLoaded;
+    await this.model.loadGroups();
+    this.scene.add(this.model.modelGroup);
+    // groups.forEach(g => this.scene.add(g));
+    if (this.modelPane) {
+      this.modelPane.scene = this.scene;
+      this.modelPane.render();
+    }
   }
 }

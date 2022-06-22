@@ -1,6 +1,7 @@
-import { Vector3 } from "three";
-import { LineSegment } from "./LineSegment.js";
+import { Vector3 } from 'three';
+import { LineSegment } from './LineSegment.js';
 
 export interface ConditionalLineSegment extends LineSegment {
-    controlPoints: Vector3[];
+  // eslint-disable-next-line no-unused-vars
+  controlPoints: Vector3[];
 }
