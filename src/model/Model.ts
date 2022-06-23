@@ -42,7 +42,12 @@ export class Model {
   }
 
   async loadLines() {
-    return this.lines;
+    return this.modelLines;
+  }
+
+  async findLine(group: Group) {
+    const modelLines = await this.loadLines();
+    return modelLines.find(line => line.group === group);
   }
 
   async buildLine(model: Submodel) {

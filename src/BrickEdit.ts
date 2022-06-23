@@ -1,9 +1,8 @@
-/* eslint-disable no-var */
-/* eslint-disable vars-on-top */
 import { AmbientLight, PointLight, Scene } from 'three';
 import { LDrawLoader } from './loaders/LDrawLoader.js';
 import { ModelInfo } from './loaders/ModelInfo.js';
 import { Model } from './model/Model.js';
+import { ModelLine } from './model/ModelLine.js';
 import { ModelPane } from './ModelPane.js';
 
 export class BrickEdit extends HTMLElement {
@@ -14,6 +13,8 @@ export class BrickEdit extends HTMLElement {
   lDrawLoader: LDrawLoader;
 
   model?: Model;
+
+  selectedLine?: ModelLine;
 
   constructor() {
     super();
@@ -41,6 +42,17 @@ export class BrickEdit extends HTMLElement {
 
     this.modelPane = this.shadowRoot?.querySelector('#pane') as ModelPane;
     this.modelPane.scene = this.scene;
+    this.modelPane.addEventListener('partselected', ((
+      event: CustomEvent<ModelLine>
+    ) => {
+      console.log(`Line selected ${event.detail.line}`);
+      this.selectedLine = event.detail;
+      // eslint-disable-next-line no-undef
+    }) as EventListener);
+    this.modelPane.addEventListener('partdeselected', () => {
+      console.log(`Line deselected ${this.selectedLine?.line}`);
+      this.selectedLine = undefined;
+    });
 
     this.lDrawLoader = new LDrawLoader();
   }
@@ -49,7 +61,6 @@ export class BrickEdit extends HTMLElement {
     this.init();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async init() {
     const lDrawPath = 'models/ldraw/';
     this.lDrawLoader.setPartsLibraryPath(lDrawPath);
@@ -182,6 +193,7 @@ export class BrickEdit extends HTMLElement {
     this.scene.add(this.model.modelGroup);
     if (this.modelPane) {
       this.modelPane.scene = this.scene;
+      this.modelPane.model = this.model;
       this.modelPane.render();
     }
   }

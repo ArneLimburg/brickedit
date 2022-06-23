@@ -1,6 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { Camera, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { OrbitControls } from './controls/OrbitControls.js';
+import { Model } from './model/Model.js';
 import { PartSelector } from './selection/PartSelector.js';
 
 // eslint-disable-next-line no-shadow
@@ -18,6 +19,8 @@ export class ModelPane extends HTMLElement {
   canvas: HTMLCanvasElement;
 
   renderer: WebGLRenderer;
+
+  model?: Model;
 
   scene: Scene;
 

@@ -1,4 +1,5 @@
-import { Color, Material, Mesh, Raycaster, Vector2 } from 'three';
+import { Color, Group, Material, Mesh, Raycaster, Vector2 } from 'three';
+import { ModelLine } from '../model/ModelLine.js';
 import { ModelPane } from '../ModelPane.js';
 
 export class PartSelector {
@@ -73,6 +74,25 @@ export class PartSelector {
       this.selection.material = this.originalMaterialOfSelection;
       this.selection = undefined;
     }
+    if (this.modelPane.model) {
+      const parent = this.selection?.parent as Group;
+      this.selected(parent);
+    }
     this.modelPane.render();
+  }
+
+  async selected(group?: Group) {
+    if (this.modelPane.model && group) {
+      const line = await this.modelPane.model.findLine(group);
+      if (line) {
+        this.modelPane.dispatchEvent(
+          new CustomEvent<ModelLine>('partselected', { detail: line })
+        );
+      }
+    } else {
+      this.modelPane.dispatchEvent(
+        new CustomEvent<ModelLine>('partdeselected')
+      );
+    }
   }
 }
