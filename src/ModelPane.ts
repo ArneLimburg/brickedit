@@ -26,6 +26,8 @@ export class ModelPane extends HTMLElement {
 
   controls: OrbitControls;
 
+  selectedEventListener: () => void;
+
   constructor() {
     super();
 
@@ -88,6 +90,8 @@ button#in-3d {
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
+    this.selectedEventListener = () => {};
+    this.canvas.addEventListener('click', this.selectedEventListener);
 
     const pane = this;
     const leftButton = this.shadowRoot?.querySelector(
@@ -137,6 +141,8 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
+    this.canvas.removeEventListener('click', this.selectedEventListener);
+    this.canvas.addEventListener('click', this.selectedEventListener);
     this.render();
   }
 
@@ -147,6 +153,8 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
+    this.canvas.removeEventListener('click', this.selectedEventListener);
+    this.canvas.addEventListener('click', this.selectedEventListener);
     this.render();
   }
 
@@ -157,6 +165,8 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
+    this.canvas.removeEventListener('click', this.selectedEventListener);
+    this.canvas.addEventListener('click', this.selectedEventListener);
     this.render();
   }
 
@@ -167,6 +177,8 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
+    this.canvas.removeEventListener('click', this.selectedEventListener);
+    this.canvas.addEventListener('click', this.selectedEventListener);
     this.render();
   }
 
@@ -177,6 +189,8 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
+    this.canvas.removeEventListener('click', this.selectedEventListener);
+    this.canvas.addEventListener('click', this.selectedEventListener);
     this.render();
   }
 
@@ -187,6 +201,8 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
+    this.canvas.removeEventListener('click', this.selectedEventListener);
+    this.canvas.addEventListener('click', this.selectedEventListener);
     this.render();
   }
 
@@ -197,6 +213,7 @@ button#in-3d {
     this.controls.enableRotate = true;
     this.controls.enablePan = false;
     this.controls.update();
+    this.canvas.removeEventListener('click', this.selectedEventListener);
     this.render();
   }
 }
