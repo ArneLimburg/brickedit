@@ -276,6 +276,9 @@ button#in-3d {
         }
         this.selection.material = cloned;
       }
+    } else if (this.selection && this.originalMaterialOfSelection) {
+      this.selection.material = this.originalMaterialOfSelection;
+      this.selection = undefined;
     }
   }
 }

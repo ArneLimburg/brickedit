@@ -2,17 +2,18 @@ import { FileLoader, Group } from 'three';
 import { LDrawLoader } from './loaders/LDrawLoader.js';
 import { ModelInfo } from './loaders/ModelInfo.js';
 import { Submodel } from './loaders/Submodel.js';
+import { ModelLine } from './ModelLine.js';
 
 export class Model {
   readonly fileName;
 
-  readonly lines;
+  readonly lines: string[];
 
   readonly loader;
 
   readonly modelGroup;
 
-  readonly submodelGroups;
+  readonly modelLines: Promise<ModelLine[]>;
 
   constructor(
     fileName: string,
@@ -26,54 +27,45 @@ export class Model {
     this.modelGroup = new Group();
     // Convert from LDraw coordinates: rotate 180 degrees around OX
     this.modelGroup.rotation.x = Math.PI;
-    this.submodelGroups = this.buildGroups(info);
+    this.modelLines = this.buildLines(info);
   }
 
-  private buildGroups(info: ModelInfo): Promise<Group[]> {
+  private buildLines(info: ModelInfo): Promise<ModelLine[]> {
     if (!info.subobjects) {
       return Promise.resolve([]);
     }
-    console.log('build groups');
-    const groups = info.subobjects.map(submodel => this.buildGroup(submodel));
-    console.log('groups built');
-    return Promise.all(groups).then(loadedGroups => {
-      loadedGroups.forEach(group => this.modelGroup.add(group));
-      console.log('added to model group');
-      return loadedGroups;
+    const lines = info.subobjects.map(submodel => this.buildLine(submodel));
+    return Promise.all(lines).then(loadedLines => {
+      loadedLines.forEach(line => this.modelGroup.add(line.group));
+      return loadedLines;
     });
   }
 
-  async loadGroups() {
-    console.log('loadGroups');
-    return this.submodelGroups;
+  async loadLines() {
+    return this.lines;
   }
 
-  async buildGroup(model: Submodel) {
-    console.log(`build group ${model.fileName}`);
-    let loaded: (group: Group) => void;
+  async buildLine(model: Submodel) {
+    let loaded: (line: ModelLine) => void;
     let failed: () => void;
-    const loadedGroup = new Promise<Group>(
-      (resolve: (group: Group) => void, reject: () => void) => {
+    const loadedLine = new Promise<ModelLine>(
+      (resolve: (line: ModelLine) => void, reject: () => void) => {
         loaded = resolve;
         failed = reject;
       }
     );
-    console.log(`load models/ldraw/models/${model.fileName}`);
     this.loadPart(
       `models/ldraw/parts/${model.fileName}`,
       model.colorCode,
       (group: Group) => {
-        console.log(`group ${model.fileName} built`);
         group.applyMatrix4(model.matrix);
-        console.log(`model.colorCode = ${model.colorCode}`);
-        // this.loader.applyMaterialsToMesh(group, model.colorCode, this.loader.materialLibrary, true);
-        console.log(`matrix for ${model.fileName} applied`);
-        loaded(group);
+
+        loaded(new ModelLine(model.line, model.lineIndex, group));
       },
       () => {},
       () => failed()
     );
-    return loadedGroup;
+    return loadedLine;
   }
 
   loadPart(

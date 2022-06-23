@@ -167,25 +167,19 @@ export class BrickEdit extends HTMLElement {
         1 0 30 6 -60 0 0 -1 0 1 0 1 0 0 3641.dat
         
         0 STEP`;
-        console.log('Content defined');
         const modelInfo = lDrawLoader.partsCache.parseCache.parse(
           content
         ) as ModelInfo;
-        console.log('parts cache');
 
         const model = new Model(fileName, content, modelInfo, lDrawLoader);
-        console.log('model created');
         loadingSuccessful(model);
       },
       () => {},
       (reason: any) => loadingError(reason)
     );
     this.model = await modelLoaded;
-    console.log('model loaded');
-    await this.model.loadGroups();
-    console.log('groups loaded');
+    await this.model.loadLines();
     this.scene.add(this.model.modelGroup);
-    // groups.forEach(g => this.scene.add(g));
     if (this.modelPane) {
       this.modelPane.scene = this.scene;
       this.modelPane.render();
