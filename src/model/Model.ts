@@ -1,7 +1,7 @@
 import { FileLoader, Group } from 'three';
-import { LDrawLoader } from './loaders/LDrawLoader.js';
-import { ModelInfo } from './loaders/ModelInfo.js';
-import { Submodel } from './loaders/Submodel.js';
+import { LDrawLoader } from '../loaders/LDrawLoader.js';
+import { ModelInfo } from '../loaders/ModelInfo.js';
+import { Submodel } from '../loaders/Submodel.js';
 import { ModelLine } from './ModelLine.js';
 
 export class Model {

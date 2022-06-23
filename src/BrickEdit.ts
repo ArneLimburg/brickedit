@@ -3,7 +3,7 @@
 import { AmbientLight, PointLight, Scene } from 'three';
 import { LDrawLoader } from './loaders/LDrawLoader.js';
 import { ModelInfo } from './loaders/ModelInfo.js';
-import { Model } from './Model.js';
+import { Model } from './model/Model.js';
 import { ModelPane } from './ModelPane.js';
 
 export class BrickEdit extends HTMLElement {

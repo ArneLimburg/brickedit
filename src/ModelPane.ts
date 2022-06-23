@@ -1,17 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
-import {
-  BoxGeometry,
-  Camera,
-  Color,
-  Material,
-  Mesh,
-  PerspectiveCamera,
-  Raycaster,
-  Scene,
-  Vector2,
-  WebGLRenderer,
-} from 'three';
+import { Camera, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { OrbitControls } from './controls/OrbitControls.js';
+import { PartSelector } from './selection/PartSelector.js';
 
 // eslint-disable-next-line no-shadow
 enum CameraDirection {
@@ -37,15 +27,7 @@ export class ModelPane extends HTMLElement {
 
   controls: OrbitControls;
 
-  selectedEventListener: (event: MouseEvent) => void;
-
-  selectionColor = new Color(0x0000ff);
-
-  selection?: Mesh;
-
-  originalMaterialOfSelection?: Material | Material[];
-
-  originalColorOfSelection?: Color;
+  partSelector: PartSelector;
 
   constructor() {
     super();
@@ -109,16 +91,8 @@ button#in-3d {
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
-    const modelPane = this;
-    this.selectedEventListener = (event: MouseEvent) => {
-      const mousePointer = new Vector2();
-      mousePointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mousePointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
-      modelPane.updateSelection(mousePointer);
-      modelPane.render();
-    };
-    this.canvas.addEventListener('click', this.selectedEventListener);
-    this.selection = new Mesh(new BoxGeometry(1, 1, 1));
+    this.partSelector = new PartSelector(this);
+    this.partSelector.register(this.canvas);
 
     const pane = this;
     const leftButton = this.shadowRoot?.querySelector(
@@ -168,8 +142,7 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
-    this.canvas.removeEventListener('click', this.selectedEventListener);
-    this.canvas.addEventListener('click', this.selectedEventListener);
+    this.partSelector.reregister(this.canvas);
     this.render();
   }
 
@@ -180,8 +153,7 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
-    this.canvas.removeEventListener('click', this.selectedEventListener);
-    this.canvas.addEventListener('click', this.selectedEventListener);
+    this.partSelector.reregister(this.canvas);
     this.render();
   }
 
@@ -192,8 +164,7 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
-    this.canvas.removeEventListener('click', this.selectedEventListener);
-    this.canvas.addEventListener('click', this.selectedEventListener);
+    this.partSelector.reregister(this.canvas);
     this.render();
   }
 
@@ -204,8 +175,7 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
-    this.canvas.removeEventListener('click', this.selectedEventListener);
-    this.canvas.addEventListener('click', this.selectedEventListener);
+    this.partSelector.reregister(this.canvas);
     this.render();
   }
 
@@ -216,8 +186,7 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
-    this.canvas.removeEventListener('click', this.selectedEventListener);
-    this.canvas.addEventListener('click', this.selectedEventListener);
+    this.partSelector.reregister(this.canvas);
     this.render();
   }
 
@@ -228,8 +197,7 @@ button#in-3d {
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
     this.controls.update();
-    this.canvas.removeEventListener('click', this.selectedEventListener);
-    this.canvas.addEventListener('click', this.selectedEventListener);
+    this.partSelector.reregister(this.canvas);
     this.render();
   }
 
@@ -240,45 +208,7 @@ button#in-3d {
     this.controls.enableRotate = true;
     this.controls.enablePan = false;
     this.controls.update();
-    this.canvas.removeEventListener('click', this.selectedEventListener);
+    this.partSelector.unregister(this.canvas);
     this.render();
-  }
-
-  updateSelection(clickLocation: Vector2) {
-    const raycaster = new Raycaster();
-    raycaster.setFromCamera(clickLocation, this.camera);
-    const intersections = raycaster.intersectObjects(this.scene.children);
-    if (intersections.length > 0) {
-      let selectedObject = intersections[0];
-      intersections.forEach(intersection => {
-        if (intersection.distance < selectedObject.distance) {
-          selectedObject = intersection;
-        }
-      });
-      if (this.selection && this.originalMaterialOfSelection) {
-        this.selection.material = this.originalMaterialOfSelection;
-      }
-      this.selection = selectedObject.object as Mesh;
-      this.originalMaterialOfSelection = this.selection.material;
-      if ((this.selection.material as Material).isMaterial) {
-        const newMaterial = (
-          this.selection.material as Material
-        ).clone() as any;
-        newMaterial.color = this.selectionColor;
-        this.selection.material = newMaterial;
-      } else {
-        const materials = this.selection.material as Material[];
-        const cloned = new Array(materials.length);
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < materials.length; i++) {
-          cloned[i] = materials[i].clone();
-          cloned[i].color = this.selectionColor;
-        }
-        this.selection.material = cloned;
-      }
-    } else if (this.selection && this.originalMaterialOfSelection) {
-      this.selection.material = this.originalMaterialOfSelection;
-      this.selection = undefined;
-    }
   }
 }
