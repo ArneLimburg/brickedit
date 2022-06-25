@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Camera, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { Camera, MOUSE, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { OrbitControls } from './controls/OrbitControls.js';
 import { Model } from './model/Model.js';
 import { PartSelector } from './selection/PartSelector.js';
@@ -144,6 +144,11 @@ button#in-3d {
     this.cameraDirection = CameraDirection.LEFT;
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.ROTATE,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.PAN,
+    };
     this.controls.update();
     this.partSelector.reregister(this.canvas);
     this.render();
@@ -155,6 +160,11 @@ button#in-3d {
     this.cameraDirection = CameraDirection.RIGHT;
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.ROTATE,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.PAN,
+    };
     this.controls.update();
     this.partSelector.reregister(this.canvas);
     this.render();
@@ -166,6 +176,11 @@ button#in-3d {
     this.cameraDirection = CameraDirection.TOP;
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.ROTATE,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.PAN,
+    };
     this.controls.update();
     this.partSelector.reregister(this.canvas);
     this.render();
@@ -177,6 +192,11 @@ button#in-3d {
     this.cameraDirection = CameraDirection.BOTTOM;
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.ROTATE,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.PAN,
+    };
     this.controls.update();
     this.partSelector.reregister(this.canvas);
     this.render();
@@ -188,6 +208,11 @@ button#in-3d {
     this.cameraDirection = CameraDirection.FRONT;
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.ROTATE,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.PAN,
+    };
     this.controls.update();
     this.partSelector.reregister(this.canvas);
     this.render();
@@ -199,6 +224,11 @@ button#in-3d {
     this.cameraDirection = CameraDirection.BACK;
     this.controls.enableRotate = false;
     this.controls.enablePan = true;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.ROTATE,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.PAN,
+    };
     this.controls.update();
     this.partSelector.reregister(this.canvas);
     this.render();
@@ -210,6 +240,11 @@ button#in-3d {
     this.cameraDirection = CameraDirection.BACK;
     this.controls.enableRotate = true;
     this.controls.enablePan = false;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.PAN,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.ROTATE,
+    };
     this.controls.update();
     this.partSelector.unregister(this.canvas);
     this.render();
