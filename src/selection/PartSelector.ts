@@ -122,7 +122,7 @@ export class PartSelector {
       this.selection?.position.set(
         intersection.x,
         intersection.y,
-        intersection.z
+        -intersection.z
       );
 
       this.modelPane.render();
