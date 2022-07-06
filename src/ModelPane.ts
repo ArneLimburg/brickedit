@@ -1,19 +1,8 @@
-// eslint-disable-next-line max-classes-per-file
 import { Camera, MOUSE, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { CameraDirection } from './CameraDirection.js';
 import { OrbitControls } from './controls/OrbitControls.js';
 import { Model } from './model/Model.js';
 import { PartSelector } from './selection/PartSelector.js';
-
-// eslint-disable-next-line no-shadow
-enum CameraDirection {
-  FRONT,
-  BACK,
-  LEFT,
-  RIGHT,
-  TOP,
-  BOTTOM,
-  _3D,
-}
 
 export class ModelPane extends HTMLElement {
   canvas: HTMLCanvasElement;

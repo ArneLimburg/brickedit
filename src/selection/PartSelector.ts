@@ -8,6 +8,7 @@ import {
   Vector2,
   Vector3,
 } from 'three';
+import { getDirectionVector } from '../CameraDirection.js';
 import { ModelLine } from '../model/ModelLine.js';
 import { ModelPane } from '../ModelPane.js';
 
@@ -111,7 +112,10 @@ export class PartSelector {
 
   moveSelection(mouseEvent: MouseEvent) {
     if (this.distanceOfSelectionFromCamera && this.movementStart) {
-      const plane = new Plane(new Vector3(0, 1, 0), 0);
+      const directionVector = getDirectionVector(
+        this.modelPane.cameraDirection
+      );
+      const plane = new Plane(directionVector, 0);
       const clickLocation = new Vector2();
       clickLocation.x = (mouseEvent.clientX / window.innerWidth) * 2 - 1;
       clickLocation.y = -(mouseEvent.clientY / window.innerHeight) * 2 + 1;
@@ -119,10 +123,14 @@ export class PartSelector {
       raycaster.setFromCamera(clickLocation, this.modelPane.camera);
       const intersection = new Vector3();
       raycaster.ray.intersectPlane(plane, intersection);
+
+      // rotate to coordinate system
+      intersection.applyAxisAngle(new Vector3(1, 0, 0), Math.PI);
+
       this.selection?.position.set(
         intersection.x,
         intersection.y,
-        -intersection.z
+        intersection.z
       );
 
       this.modelPane.render();
