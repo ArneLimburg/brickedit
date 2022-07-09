@@ -1,4 +1,11 @@
-import { Camera, MOUSE, PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import {
+  Camera,
+  MOUSE,
+  OrthographicCamera,
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+} from 'three';
 import { CameraDirection } from './CameraDirection.js';
 import { OrbitControls } from './controls/OrbitControls.js';
 import { Model } from './model/Model.js';
@@ -68,23 +75,20 @@ button#in-3d {
     ) as HTMLCanvasElement;
     this.scene = new Scene();
 
+    this.renderer = new WebGLRenderer({ canvas: this.canvas });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    this.partSelector = new PartSelector(this);
+    this.partSelector.register(this.canvas);
+
     this.camera = new PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       1,
       10000
     );
-    this.camera.position.set(0, 0, 500);
-    this.camera.lookAt(this.scene.position);
-
-    this.renderer = new WebGLRenderer({ canvas: this.canvas });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-
     this.controls = new OrbitControls(this.camera, this.canvas);
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-    this.partSelector = new PartSelector(this);
-    this.partSelector.register(this.canvas);
+    this.viewIn3D();
 
     const pane = this;
     const leftButton = this.shadowRoot?.querySelector(
@@ -128,105 +132,60 @@ button#in-3d {
   }
 
   viewFromLeft() {
-    this.camera.position.set(500, 0, 0);
-    this.camera.lookAt(this.scene.position);
-    this.cameraDirection = CameraDirection.LEFT;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-    this.controls.mouseButtons = {
-      LEFT: MOUSE.ROTATE,
-      MIDDLE: MOUSE.DOLLY,
-      RIGHT: MOUSE.PAN,
-    };
-    this.controls.update();
-    this.partSelector.reregister(this.canvas);
-    this.render();
+    this.transformCamera(CameraDirection.LEFT, 500, 0, 0);
   }
 
   viewFromRight() {
-    this.camera.position.set(-500, 0, 0);
-    this.camera.lookAt(this.scene.position);
-    this.cameraDirection = CameraDirection.RIGHT;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-    this.controls.mouseButtons = {
-      LEFT: MOUSE.ROTATE,
-      MIDDLE: MOUSE.DOLLY,
-      RIGHT: MOUSE.PAN,
-    };
-    this.controls.update();
-    this.partSelector.reregister(this.canvas);
-    this.render();
+    this.transformCamera(CameraDirection.RIGHT, -500, 0, 0);
   }
 
   viewFromTop() {
-    this.camera.position.set(0, 500, 0);
-    this.camera.lookAt(this.scene.position);
-    this.cameraDirection = CameraDirection.TOP;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-    this.controls.mouseButtons = {
-      LEFT: MOUSE.ROTATE,
-      MIDDLE: MOUSE.DOLLY,
-      RIGHT: MOUSE.PAN,
-    };
-    this.controls.update();
-    this.partSelector.reregister(this.canvas);
-    this.render();
+    this.transformCamera(CameraDirection.TOP, 0, 500, 0);
   }
 
   viewFromBottom() {
-    this.camera.position.set(0, -500, 0);
-    this.camera.lookAt(this.scene.position);
-    this.cameraDirection = CameraDirection.BOTTOM;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-    this.controls.mouseButtons = {
-      LEFT: MOUSE.ROTATE,
-      MIDDLE: MOUSE.DOLLY,
-      RIGHT: MOUSE.PAN,
-    };
-    this.controls.update();
-    this.partSelector.reregister(this.canvas);
-    this.render();
+    this.transformCamera(CameraDirection.BOTTOM, 0, -500, 0);
   }
 
   viewFromFront() {
-    this.camera.position.set(0, 0, 500);
-    this.camera.lookAt(this.scene.position);
-    this.cameraDirection = CameraDirection.FRONT;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-    this.controls.mouseButtons = {
-      LEFT: MOUSE.ROTATE,
-      MIDDLE: MOUSE.DOLLY,
-      RIGHT: MOUSE.PAN,
-    };
-    this.controls.update();
-    this.partSelector.reregister(this.canvas);
-    this.render();
+    this.transformCamera(CameraDirection.FRONT, 0, 0, 500);
   }
 
   viewFromBack() {
-    this.camera.position.set(0, 0, -500);
+    this.transformCamera(CameraDirection.BACK, 0, 0, -500);
+  }
+
+  viewIn3D() {
+    this.transformCamera(CameraDirection._3D, 289, 289, 289);
+  }
+
+  transformCamera(
+    cameraDirection: CameraDirection,
+    x: number,
+    y: number,
+    z: number
+  ) {
+    if (cameraDirection === CameraDirection._3D) {
+      this.activate3D();
+    } else {
+      this.deactivate3D();
+    }
+    this.camera.position.set(x, y, z);
     this.camera.lookAt(this.scene.position);
-    this.cameraDirection = CameraDirection.BACK;
-    this.controls.enableRotate = false;
-    this.controls.enablePan = true;
-    this.controls.mouseButtons = {
-      LEFT: MOUSE.ROTATE,
-      MIDDLE: MOUSE.DOLLY,
-      RIGHT: MOUSE.PAN,
-    };
+    this.cameraDirection = cameraDirection;
     this.controls.update();
     this.partSelector.reregister(this.canvas);
     this.render();
   }
 
-  viewIn3D() {
-    this.camera.position.set(289, 289, 289);
-    this.camera.lookAt(this.scene.position);
-    this.cameraDirection = CameraDirection.BACK;
+  activate3D() {
+    this.camera = new PerspectiveCamera(
+      45,
+      window.innerWidth / window.innerHeight,
+      1,
+      10000
+    );
+    this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.enableRotate = true;
     this.controls.enablePan = false;
     this.controls.mouseButtons = {
@@ -234,8 +193,26 @@ button#in-3d {
       MIDDLE: MOUSE.DOLLY,
       RIGHT: MOUSE.ROTATE,
     };
-    this.controls.update();
-    this.partSelector.unregister(this.canvas);
-    this.render();
+  }
+
+  deactivate3D() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    this.camera = new OrthographicCamera(
+      width / -2,
+      width / 2,
+      height / 2,
+      height / -2,
+      -1000000,
+      1000000
+    );
+    this.controls = new OrbitControls(this.camera, this.canvas);
+    this.controls.enableRotate = false;
+    this.controls.enablePan = true;
+    this.controls.mouseButtons = {
+      LEFT: MOUSE.ROTATE,
+      MIDDLE: MOUSE.DOLLY,
+      RIGHT: MOUSE.PAN,
+    };
   }
 }
