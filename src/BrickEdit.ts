@@ -4,6 +4,7 @@ import { ModelLoader } from './loaders/ModelLoader.js';
 import { Model } from './model/Model.js';
 import { ModelLine } from './model/ModelLine.js';
 import { ModelPane } from './ModelPane.js';
+import { PartTransformation } from './PartTransformation.js';
 
 export class BrickEdit extends HTMLElement {
   scene: Scene;
@@ -51,6 +52,11 @@ export class BrickEdit extends HTMLElement {
     }) as EventListener);
     this.modelPane.addEventListener('partdeselected', () => {
       console.log(`Line deselected ${this.selectedLine?.line}`);
+      this.selectedLine = undefined;
+    });
+    this.modelPane.addEventListener('partmoved', e => {
+      const moveEvent = e as CustomEvent<PartTransformation>;
+      console.log(`Line moved ${moveEvent.detail.line}`);
       this.selectedLine = undefined;
     });
 
