@@ -52,19 +52,43 @@ button {
   width: 60px;
   height: 60px;
 }
+button#from-left {
+  background: url("./files/from-left.svg");
+  border: none;
+}
+button#from-right {
+  background: url("./files/from-right.svg");
+  border: none;
+}
+button#from-top {
+  background: url("./files/from-top.svg");
+  border: none;
+}
+button#from-bottom {
+  background: url("./files/from-bottom.svg");
+  border: none;
+}
+button#from-front {
+  background: url("./files/from-front.svg");
+  border: none;
+}
+button#from-back {
+  background: url("./files/from-back.svg");
+  border: none;
+}
 button#in-3d {
   background: url("./files/cube.svg");
   border: none;
 }
 </style>
 <div>
-  <button id="from-left">From left</button>
-  <button id="from-right">From right</button>
-  <button id="from-top">From top</button>
-  <button id="from-bottom">From bottom</button>
-  <button id="from-front">From front</button>
-  <button id="from-back">From back</button>
-  <button id="in-3d">3D</button>
+  <button id="from-left"></button>
+  <button id="from-right"></button>
+  <button id="from-top"></button>
+  <button id="from-bottom"></button>
+  <button id="from-front"></button>
+  <button id="from-back"></button>
+  <button id="in-3d"></button>
 </div>
 <canvas id="canvas"></canvas>`;
     this.attachShadow({ mode: 'open' });
