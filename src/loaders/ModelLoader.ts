@@ -70,7 +70,7 @@ export class ModelLoader {
       (group: Group) => {
         group.applyMatrix4(model.matrix);
 
-        loaded(new ModelLine(model.line, model.lineIndex, group));
+        loaded(new ModelLine(model.line, model.lineIndex, model.matrix, group));
       },
       () => {},
       () => failed()

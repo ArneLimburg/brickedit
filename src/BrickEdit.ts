@@ -57,6 +57,8 @@ export class BrickEdit extends HTMLElement {
     this.modelPane.addEventListener('partmoved', e => {
       const moveEvent = e as CustomEvent<PartTransformation>;
       console.log(`Line moved ${moveEvent.detail.line}`);
+      moveEvent.detail.line.matrix.multiply(moveEvent.detail.matrix);
+      moveEvent.detail.line.group.applyMatrix4(moveEvent.detail.matrix);
       this.selectedLine = undefined;
     });
 
