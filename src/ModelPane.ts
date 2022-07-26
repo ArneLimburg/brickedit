@@ -4,14 +4,28 @@ import {
   OrthographicCamera,
   PerspectiveCamera,
   Scene,
+  Vector3,
   WebGLRenderer,
 } from 'three';
 import { CameraDirection } from './CameraDirection.js';
+import { CameraSwitch } from './CameraSwitch.js';
 import { OrbitControls } from './controls/OrbitControls.js';
 import { Model } from './model/Model.js';
 import { PartSelector } from './selection/PartSelector.js';
 
 export class ModelPane extends HTMLElement {
+  static readonly cameraPositions: {
+    [key: string]: Vector3;
+  } = {
+    FRONT: new Vector3(0, 0, 500),
+    RIGHT: new Vector3(500, 0, 0),
+    TOP: new Vector3(0, 500, 0),
+    LEFT: new Vector3(-500, 0, 0),
+    BOTTOM: new Vector3(0, -500, 0),
+    BACK: new Vector3(0, 0, -500),
+    _3D: new Vector3(289, 289, 289),
+  };
+
   canvas: HTMLCanvasElement;
 
   renderer: WebGLRenderer;
@@ -45,50 +59,9 @@ div {
   display: flex;
   flex-direction: row;
 }
-button {
-  margin-left: 18px;
-  margin-right: 18px;
-  margin-top: 36px;
-  width: 60px;
-  height: 60px;
-}
-button#from-left {
-  background: url("./files/from-left.svg");
-  border: none;
-}
-button#from-right {
-  background: url("./files/from-right.svg");
-  border: none;
-}
-button#from-top {
-  background: url("./files/from-top.svg");
-  border: none;
-}
-button#from-bottom {
-  background: url("./files/from-bottom.svg");
-  border: none;
-}
-button#from-front {
-  background: url("./files/from-front.svg");
-  border: none;
-}
-button#from-back {
-  background: url("./files/from-back.svg");
-  border: none;
-}
-button#in-3d {
-  background: url("./files/cube.svg");
-  border: none;
-}
 </style>
 <div>
-  <button id="from-left"></button>
-  <button id="from-right"></button>
-  <button id="from-top"></button>
-  <button id="from-bottom"></button>
-  <button id="from-front"></button>
-  <button id="from-back"></button>
-  <button id="in-3d"></button>
+  <button id="switch" is="camera-switch"></button>
 </div>
 <canvas id="canvas"></canvas>`;
     this.attachShadow({ mode: 'open' });
@@ -112,40 +85,27 @@ button#in-3d {
       10000
     );
     this.controls = new OrbitControls(this.camera, this.canvas);
-    this.viewIn3D();
 
-    const pane = this;
-    const leftButton = this.shadowRoot?.querySelector(
-      '#from-left'
-    ) as HTMLButtonElement;
-    leftButton.onclick = () => pane.viewFromLeft();
-    const rightButton = this.shadowRoot?.querySelector(
-      '#from-right'
-    ) as HTMLButtonElement;
-    rightButton.onclick = () => pane.viewFromRight();
-    const topButton = this.shadowRoot?.querySelector(
-      '#from-top'
-    ) as HTMLButtonElement;
-    topButton.onclick = () => pane.viewFromTop();
-    const bottomButton = this.shadowRoot?.querySelector(
-      '#from-bottom'
-    ) as HTMLButtonElement;
-    bottomButton.onclick = () => pane.viewFromBottom();
-    const frontButton = this.shadowRoot?.querySelector(
-      '#from-front'
-    ) as HTMLButtonElement;
-    frontButton.onclick = () => pane.viewFromFront();
-    const backButton = this.shadowRoot?.querySelector(
-      '#from-back'
-    ) as HTMLButtonElement;
-    backButton.onclick = () => pane.viewFromBack();
-    const threeDButton = this.shadowRoot?.querySelector(
-      '#in-3d'
-    ) as HTMLButtonElement;
-    threeDButton.onclick = () => pane.viewIn3D();
+    //    const pane = this;
+    const switchButton = this.shadowRoot?.querySelector(
+      '#switch'
+    ) as CameraSwitch;
+    switchButton.addEventListener('cameradirectionchanged', ((
+      event: CustomEvent<CameraDirection>
+    ) => {
+      this.transformCamera(
+        event.detail,
+        ModelPane.cameraPositions[event.detail]
+      );
+      // eslint-disable-next-line no-undef
+    }) as EventListener);
   }
 
   connectedCallback() {
+    this.transformCamera(
+      CameraDirection._3D,
+      ModelPane.cameraPositions[CameraDirection._3D]
+    );
     this.render();
   }
 
@@ -155,46 +115,13 @@ button#in-3d {
     this.renderer.render(this.scene, this.camera);
   }
 
-  viewFromLeft() {
-    this.transformCamera(CameraDirection.LEFT, 500, 0, 0);
-  }
-
-  viewFromRight() {
-    this.transformCamera(CameraDirection.RIGHT, -500, 0, 0);
-  }
-
-  viewFromTop() {
-    this.transformCamera(CameraDirection.TOP, 0, 500, 0);
-  }
-
-  viewFromBottom() {
-    this.transformCamera(CameraDirection.BOTTOM, 0, -500, 0);
-  }
-
-  viewFromFront() {
-    this.transformCamera(CameraDirection.FRONT, 0, 0, 500);
-  }
-
-  viewFromBack() {
-    this.transformCamera(CameraDirection.BACK, 0, 0, -500);
-  }
-
-  viewIn3D() {
-    this.transformCamera(CameraDirection._3D, 289, 289, 289);
-  }
-
-  transformCamera(
-    cameraDirection: CameraDirection,
-    x: number,
-    y: number,
-    z: number
-  ) {
+  transformCamera(cameraDirection: CameraDirection, position: Vector3) {
     if (cameraDirection === CameraDirection._3D) {
       this.activate3D();
     } else {
       this.deactivate3D();
     }
-    this.camera.position.set(x, y, z);
+    this.camera.position.set(position.x, position.y, position.z);
     this.camera.lookAt(this.scene.position);
     this.cameraDirection = cameraDirection;
     this.controls.update();
