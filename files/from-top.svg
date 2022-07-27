@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg version="1.1" id="cube" xmlns="http://www.w3.org/2000/svg"
+	 viewBox="0 0 25 25" style="enable-background:new 0 0 32 32;">
+  <path d="M 15.888 24 L 21.84 18.64 L 21.84 2.68 L 15.888 8 L 15.888 24 L 0 22.048 L 0 6.048 L 15.888 8 M 21.84 2.68 L 5.952 0.64 L 0 6.048 L 15.888 8" stroke="white" />
+  <path d="M 10.92 -11.68 L 10.92 4.32 L 9.92 3.32 L 11.92 3.32 L 10.92 4.32" stroke="white" />
+</svg>
