@@ -29,7 +29,13 @@ export class BrickEdit extends HTMLElement {
 	height: 100%;
 }
 </style>
-<model-pane id="pane"></model-pane>`;
+<model-pane id="pane"></model-pane>
+<floating-action>
+  <a target="_blank" class="button menu-item"></a>
+  <a target="_blank" class="button menu-item"></a>
+  <a target="_blank" class="button menu-item"></a>
+</floating-action>
+`;
     this.attachShadow({ mode: 'open' });
     this.shadowRoot?.appendChild(template.content.cloneNode(true));
 
