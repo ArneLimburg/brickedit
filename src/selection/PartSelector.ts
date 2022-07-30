@@ -160,10 +160,10 @@ export class PartSelector {
   private static getPointerLocation(
     event: MouseEvent | TouchEvent
   ): PointerLocation {
-    if (event.type === 'MouseEvent') {
-      return event as PointerLocation;
+    if (event.type === 'TouchEvent') {
+      return (event as TouchEvent).touches.item(0) as PointerLocation;
     }
-    return (event as TouchEvent).touches.item(0) as PointerLocation;
+    return event as PointerLocation;
   }
 
   selectionMoved(mouseEvent: MouseEvent | TouchEvent) {

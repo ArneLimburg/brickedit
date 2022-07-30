@@ -54,18 +54,16 @@ export class BrickEdit extends HTMLElement {
 
     this.modelPane = this.shadowRoot?.querySelector('#pane') as ModelPane;
     this.modelPane.scene = this.scene;
-    this.modelPane.addEventListener('partselected', ((
-      event: CustomEvent<ModelLine>
-    ) => {
+    this.addEventListener('partselected', ((event: CustomEvent<ModelLine>) => {
       console.log(`Line selected ${event.detail.line}`);
       this.selectedLine = event.detail;
       // eslint-disable-next-line no-undef
     }) as EventListener);
-    this.modelPane.addEventListener('partdeselected', () => {
+    this.addEventListener('partdeselected', () => {
       console.log(`Line deselected ${this.selectedLine?.line}`);
       this.selectedLine = undefined;
     });
-    this.modelPane.addEventListener('partmoved', e => {
+    this.addEventListener('partmoved', e => {
       const moveEvent = e as CustomEvent<PartTransformation>;
       console.log(`Line moved ${moveEvent.detail.line}`);
       moveEvent.detail.line.matrix.multiply(moveEvent.detail.matrix);
