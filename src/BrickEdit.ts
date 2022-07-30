@@ -28,12 +28,17 @@ export class BrickEdit extends HTMLElement {
 	margin: 0;
 	height: 100%;
 }
+.upload {
+  background-image: url('./files/upload.svg');
+}
+.download {
+  background-image: url('./files/download.svg');
+}
 </style>
 <model-pane id="pane"></model-pane>
 <floating-action>
-  <a target="_blank" class="button menu-item"></a>
-  <a target="_blank" class="button menu-item"></a>
-  <a target="_blank" class="button menu-item"></a>
+  <a class="upload" target="_blank"></a>
+  <a class="download" target="_blank"></a>
 </floating-action>
 `;
     this.attachShadow({ mode: 'open' });

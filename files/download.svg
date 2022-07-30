@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<svg version="1.1" id="cube" xmlns="http://www.w3.org/2000/svg"
+	 viewBox="0 0 25 25" style="background: transparent;">
+  <path d="M 7.5 12.5 L 7.5 17.5 L 17.5 17.5 L 17.5 12.5" stroke="white" style="fill-opacity:0"/>
+  <path d="M 12.5 7.5 L 12.5 15 L 11.5 14 L 13.5 14 L 12.5 15" stroke="white"/>
+</svg>
