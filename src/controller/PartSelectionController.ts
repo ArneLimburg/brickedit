@@ -19,7 +19,7 @@ interface PointerLocation {
   readonly clientY: number;
 }
 
-export class PartSelector {
+export class PartSelectionController {
   readonly modelPane: ModelPane;
 
   selectionColor = new Color(0x0000ff);
@@ -77,7 +77,8 @@ export class PartSelector {
       'touchend',
       this.moveFinishedListener as any
     );
-    const pointerLocation = PartSelector.getPointerLocation(mouseEvent);
+    const pointerLocation =
+      PartSelectionController.getPointerLocation(mouseEvent);
     const clickLocation = new Vector2();
     clickLocation.x = (pointerLocation.clientX / window.innerWidth) * 2 - 1;
     clickLocation.y = -(pointerLocation.clientY / window.innerHeight) * 2 + 1;
@@ -135,7 +136,8 @@ export class PartSelector {
         this.modelPane.cameraDirection
       );
       const plane = new Plane(directionVector, 0);
-      const pointerLocation = PartSelector.getPointerLocation(mouseEvent);
+      const pointerLocation =
+        PartSelectionController.getPointerLocation(mouseEvent);
       const clickLocation = new Vector2();
       clickLocation.x = (pointerLocation.clientX / window.innerWidth) * 2 - 1;
       clickLocation.y = -(pointerLocation.clientY / window.innerHeight) * 2 + 1;

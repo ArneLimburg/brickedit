@@ -9,9 +9,9 @@ import {
 } from 'three';
 import { CameraDirection } from './CameraDirection.js';
 import { CameraSwitch } from './CameraSwitch.js';
-import { OrbitControls } from './controls/OrbitControls.js';
+import { OrbitControls } from './controller/OrbitController.js';
 import { Model } from './model/Model.js';
-import { PartSelector } from './selection/PartSelector.js';
+import { PartSelectionController } from './controller/PartSelectionController.js';
 
 export class ModelPane extends HTMLElement {
   static readonly cameraPositions: {
@@ -40,7 +40,7 @@ export class ModelPane extends HTMLElement {
 
   controls: OrbitControls;
 
-  partSelector: PartSelector;
+  partSelector: PartSelectionController;
 
   constructor() {
     super();
@@ -75,7 +75,7 @@ div {
     this.renderer = new WebGLRenderer({ canvas: this.canvas });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-    this.partSelector = new PartSelector(this);
+    this.partSelector = new PartSelectionController(this);
     this.partSelector.register(this.canvas);
 
     this.camera = new PerspectiveCamera(
