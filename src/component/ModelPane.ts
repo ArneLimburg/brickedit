@@ -30,9 +30,9 @@ export class ModelPane extends HTMLElement {
 
   renderer: WebGLRenderer;
 
-  model?: Model;
+  _model?: Model;
 
-  scene: Scene;
+  _scene: Scene;
 
   camera: Camera;
 
@@ -70,7 +70,7 @@ div {
     this.canvas = this.shadowRoot?.querySelector(
       '#canvas'
     ) as HTMLCanvasElement;
-    this.scene = new Scene();
+    this._scene = new Scene();
 
     this.renderer = new WebGLRenderer({ canvas: this.canvas });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -106,6 +106,16 @@ div {
       CameraDirection._3D,
       ModelPane.cameraPositions[CameraDirection._3D]
     );
+    this.render();
+  }
+
+  set scene(scene: Scene) {
+    this._scene = scene;
+    this.render();
+  }
+
+  set model(model: Model) {
+    this._model = model;
     this.render();
   }
 
