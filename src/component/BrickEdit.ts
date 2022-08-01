@@ -1,7 +1,10 @@
-import { ModelFileController } from './controller/ModelFileController.js';
+import { Scene } from 'three';
+import { Model } from '../model/Model.js';
+import { ModelFileController } from '../controller/ModelFileController.js';
+import { ModelComponent } from './ModelComponent.js';
 import { ModelPane } from './ModelPane.js';
 
-export class BrickEdit extends HTMLElement {
+export class BrickEdit extends HTMLElement implements ModelComponent {
   readonly modelFileController: ModelFileController;
 
   constructor() {
@@ -35,7 +38,29 @@ export class BrickEdit extends HTMLElement {
     this.modelFileController = new ModelFileController(modelPane);
   }
 
+  set model(model: Model) {
+    this.getModelPanes().forEach((modelPane: ModelPane) => {
+      // eslint-disable-next-line no-param-reassign
+      modelPane.model = model;
+    });
+  }
+
+  set scene(scene: Scene) {
+    this.getModelPanes().forEach((modelPane: ModelPane) => {
+      // eslint-disable-next-line no-param-reassign
+      modelPane.scene = scene;
+    });
+  }
+
   connectedCallback() {
     this.modelFileController.init();
+  }
+
+  // eslint-disable-next-line no-undef
+  getModelPanes(): NodeListOf<ModelPane> {
+    return this.shadowRoot?.querySelectorAll(
+      'ModelPane'
+      // eslint-disable-next-line no-undef
+    ) as NodeListOf<ModelPane>;
   }
 }

@@ -9,10 +9,10 @@ import {
   Vector2,
   Vector3,
 } from 'three';
-import { getDirectionVector } from '../CameraDirection.js';
+import { getDirectionVector } from '../component/CameraDirection.js';
 import { ModelLine } from '../model/ModelLine.js';
-import { ModelPane } from '../ModelPane.js';
-import { PartTransformation } from '../PartTransformation.js';
+import { ModelPane } from '../component/ModelPane.js';
+import { PartTransformation } from '../model/PartTransformation.js';
 
 interface PointerLocation {
   readonly clientX: number;

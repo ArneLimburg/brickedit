@@ -9,9 +9,9 @@ import {
 } from 'three';
 import { CameraDirection } from './CameraDirection.js';
 import { CameraSwitch } from './CameraSwitch.js';
-import { OrbitControls } from './controller/OrbitController.js';
-import { Model } from './model/Model.js';
-import { PartSelectionController } from './controller/PartSelectionController.js';
+import { OrbitControls } from '../controller/OrbitController.js';
+import { Model } from '../model/Model.js';
+import { PartSelectionController } from '../controller/PartSelectionController.js';
 
 export class ModelPane extends HTMLElement {
   static readonly cameraPositions: {

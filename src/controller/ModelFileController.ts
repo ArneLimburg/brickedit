@@ -1,15 +1,15 @@
 import { AmbientLight, PointLight, Scene } from 'three';
-import { LDrawLoader } from '../loaders/LDrawLoader.js';
-import { ModelLoader } from '../loaders/ModelLoader.js';
+import { LDrawLoader } from '../ldraw/LDrawLoader.js';
+import { ModelLoader } from '../ldraw/ModelLoader.js';
 import { Model } from '../model/Model.js';
 import { ModelLine } from '../model/ModelLine.js';
-import { ModelPane } from '../ModelPane.js';
-import { PartTransformation } from '../PartTransformation.js';
+import { PartTransformation } from '../model/PartTransformation.js';
+import { ModelComponent } from '../component/ModelComponent.js';
 
 export class ModelFileController {
   scene: Scene;
 
-  modelPane: ModelPane;
+  component: HTMLElement & ModelComponent;
 
   lDrawLoader: LDrawLoader;
 
@@ -17,7 +17,7 @@ export class ModelFileController {
 
   selectedLine?: ModelLine;
 
-  constructor(modelPane: ModelPane) {
+  constructor(modelComponent: HTMLElement & ModelComponent) {
     this.scene = new Scene();
     const ambientLight = new AmbientLight(0xcccccc, 0.4);
     this.scene.add(ambientLight);
@@ -26,20 +26,20 @@ export class ModelFileController {
     pointLight.position.set(-1000, 1200, 1500);
     this.scene.add(pointLight);
 
-    this.modelPane = modelPane;
-    this.modelPane.scene = this.scene;
-    this.modelPane.addEventListener('partselected', ((
+    this.component = modelComponent;
+    this.component.scene = this.scene;
+    this.component.addEventListener('partselected', ((
       event: CustomEvent<ModelLine>
     ) => {
       console.log(`Line selected ${event.detail.line}`);
       this.selectedLine = event.detail;
       // eslint-disable-next-line no-undef
     }) as EventListener);
-    this.modelPane.addEventListener('partdeselected', () => {
+    this.component.addEventListener('partdeselected', () => {
       console.log(`Line deselected ${this.selectedLine?.line}`);
       this.selectedLine = undefined;
     });
-    this.modelPane.addEventListener('partmoved', e => {
+    this.component.addEventListener('partmoved', e => {
       const moveEvent = e as CustomEvent<PartTransformation>;
       console.log(`Line moved ${moveEvent.detail.line}`);
       moveEvent.detail.line.matrix.multiply(moveEvent.detail.matrix);
@@ -158,10 +158,9 @@ export class ModelFileController {
     0 STEP`;
     this.model = await modelLoader.load(fileName, content);
     this.scene.add(this.model.modelGroup);
-    if (this.modelPane) {
-      this.modelPane.scene = this.scene;
-      this.modelPane.model = this.model;
-      this.modelPane.render();
+    if (this.component) {
+      this.component.scene = this.scene;
+      this.component.model = this.model;
     }
   }
 }

@@ -1,8 +1,8 @@
 import { html } from 'lit';
 import { fixture, expect } from '@open-wc/testing';
 
-import { BrickEdit } from '../src/BrickEdit.js';
-import '../src/brick-edit.js';
+import { BrickEdit } from '../src/component/BrickEdit.js';
+import '../src/component/brick-edit.js';
 
 describe('BrickEdit', () => {
   let element: BrickEdit;
